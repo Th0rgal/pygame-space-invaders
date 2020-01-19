@@ -184,12 +184,11 @@ def gerer_clavier_souris():
 
     touches_pressees = pygame.key.get_pressed()
 
-    if touches_pressees[pygame.K_RIGHT] == True and position_vaisseau[0] + SPACESHIP_SIZE[0] < SCREEN_SIZE[0]:
-        position_vaisseau = ( position_vaisseau[0] + 10 , position_vaisseau[1] )
+    if touches_pressees[pygame.K_RIGHT] == True and spaceship.position[0] + spaceship.size[0] < SCREEN_SIZE[0]:
+        spaceship.move( 10, 0 )
 
-    elif touches_pressees[pygame.K_LEFT] == True and position_vaisseau[0] > 0 :
-        position_vaisseau = ( position_vaisseau[0] - 10 , position_vaisseau[1] )
-
+    elif touches_pressees[pygame.K_LEFT] == True and spaceship.position[0] > 0 :
+        spaceship.move( -10, 0 )
 
 clock = pygame.time.Clock()
 continuer = 1
