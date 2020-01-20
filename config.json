@@ -1,0 +1,38 @@
+{
+    "settings": {
+        "title" : "Space Invader, Marchand Thomas 707",
+
+        "screen_width" : 1200,
+        "screen_lenght" : 500,
+
+        "spaceship_width" : 64,
+        "spaceship_lenght" : 64,
+        "spaceship_shot_sound" : "./pew.wav",
+
+        "font_name" : "arial",
+        "font_size" : 24
+
+    },
+
+    "levels": [
+        {
+            "name": "Petit joueur",
+            "aliens" : "default",
+            "aliens_rows" : 5,
+            "aliens_columns" : 2
+        }
+    ],
+
+    "aliens": {
+        "default": {
+
+            "width" : 33,
+            "lenght" : 27,
+
+            "image": "./alien.png",
+            "kill_sound" : "./kill.wav"
+
+        }
+
+    }
+}
