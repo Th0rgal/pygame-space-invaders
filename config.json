@@ -1,50 +1,53 @@
 {
     "settings": {
-        "title" : "Space Invader, Marchand Thomas 707",
-
-        "screen_width" : 500,
-        "screen_lenght" : 400,
-
-        "spaceship_width" : 64,
-        "spaceship_lenght" : 64,
-        "spaceship_shot_sound" : "./pew.wav",
-
-        "font_name" : "arial",
-        "font_size" : 24
-
+        "title": "Space Invader, Marchand Thomas 707",
+        "screen_width": 600,
+        "screen_height": 400,
+        "spaceship_width": 64,
+        "spaceship_height": 64,
+        "spaceship_shot_sound": "./pew.wav",
+        "font_name": "arial",
+        "font_size": 24
     },
-
     "levels": [
         {
             "name": "Petit joueur",
-            "aliens" : "default",
-            "aliens_rows" : 1,
-            "aliens_columns" : 1
+            "aliens": "default",
+            "aliens_rows": 1,
+            "aliens_columns": 1
         },
         {
             "name": "Chasseur d'aliens débutant",
-            "aliens" : "default",
-            "aliens_rows" : 1,
-            "aliens_columns" : 3
+            "aliens": "superfast",
+            "aliens_rows": 1,
+            "aliens_columns": 6
         },
         {
-            "name": "Petit joueur",
-            "aliens" : "default",
-            "aliens_rows" : 2,
-            "aliens_columns" : 6
+            "name": "Jeune explorateur de la galaxie",
+            "aliens": "small",
+            "aliens_rows": 1,
+            "aliens_columns": 3
         }
-    ],
 
+    ],
     "aliens": {
         "default": {
-
-            "width" : 48,
-            "lenght" : 32,
-
+            "width": 48,
+            "height": 32,
             "image": "./alien_green.png",
-            "kill_sound" : "./kill.wav"
-
+            "kill_sound": "./kill.wav"
+        },
+        "small": {
+            "width": 24,
+            "height": 24,
+            "image": "./alien_orange.png",
+            "kill_sound": "./kill.wav"
+        },
+        "superfast": {
+            "width": 44,
+            "height": 32,
+            "image": "./alien_purple.png",
+            "kill_sound": "./kill.wav"
         }
-
     }
 }

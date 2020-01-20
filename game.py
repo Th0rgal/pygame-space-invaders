@@ -147,9 +147,9 @@ def win_game():
 def load_settings(settings):
     global SCREEN_SIZE, FONT, fenetre, spaceship
     pygame.display.set_caption( settings["title"] )
-    SCREEN_SIZE = ( settings["screen_width"], settings["screen_lenght"] )
+    SCREEN_SIZE = ( settings["screen_width"], settings["screen_height"] )
     fenetre = pygame.display.set_mode( SCREEN_SIZE )
-    spaceship_size = ( settings["spaceship_width"], settings["spaceship_lenght"] )
+    spaceship_size = ( settings["spaceship_width"], settings["spaceship_height"] )
     spaceship_sound = pygame.mixer.Sound(settings["spaceship_shot_sound"])
 
     spaceship = Spaceship(spaceship_size, (SCREEN_SIZE[0]/2, SCREEN_SIZE[1] - 75), pygame.transform.scale(pygame.image.load("vaisseau.png"), spaceship_size), spaceship_sound)
@@ -158,7 +158,7 @@ def load_settings(settings):
 
 def get_alien(alien_name):
     alien_config = config["aliens"][alien_name]
-    alien_size = ( alien_config["width"], alien_config["lenght"] )
+    alien_size = ( alien_config["width"], alien_config["height"] )
     alien_image = alien_config["image"]
     kill_sound = pygame.mixer.Sound( alien_config["kill_sound"] )
     return Alien( alien_size,  None, pygame.transform.scale(pygame.image.load(alien_image), alien_size), kill_sound)
