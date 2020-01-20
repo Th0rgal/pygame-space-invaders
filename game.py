@@ -1,5 +1,6 @@
 import pygame
 import random
+import json
 
 class Entity:
     def __init__(self, size, position, image):
@@ -76,8 +77,17 @@ def lose_game():
     print_text("You lost", pygame.Color(255, 25, 25))
     end_game()
 
+def load_settings(settings):
+    global SCREEN_SIZE
+    SCREEN_SIZE = ( settings["screen_width"], settings["screen_lenght"] )
+
+def load_level():
+    pass
 
 pygame.init() # initialisation du module "pygame"
+with open("./config.json") as json_file:
+    config = json.load(json_file)
+load_settings(config["settings"])
 
 # CONSTANTES
 SCREEN_SIZE = (600, 600)
