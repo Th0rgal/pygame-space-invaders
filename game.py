@@ -57,10 +57,10 @@ def generate_aliens(alien, rows = 2, columns = 5):
     return aliens
 
 def print_text(content, color):
-    global FONT
-    text = FONT.render(content, True, color)
-    x = int((SCREEN_SIZE[0]-FONT.size(content)[0])/2)
-    y = int((SCREEN_SIZE[1]-FONT.size(content)[1])/2)
+    font = pygame.font.SysFont("arial", 45)
+    text = font.render(content, True, color)
+    x = int((SCREEN_SIZE[0]-font.size(content)[0])/2)
+    y = int((SCREEN_SIZE[1]-font.size(content)[1])/2)
     fenetre.blit(text, (x,y))
 
 def end_game():
@@ -124,7 +124,7 @@ def move_aliens():
     for alien in aliens:
         if move_to_bottom:
             alien.move(0, ALIEN_SIZE[1])
-            if alien.position[0] <= 0:
+            if alien.position[1] >= SCREEN_SIZE[1]:
                 lose_game()
         elif shift_right:
             alien.move(5, 0)
@@ -178,15 +178,6 @@ def dessiner():
     for projectile in projectiles:
         if projectile != (-1, -1):
             pygame.draw.circle(fenetre, (255,255,255), projectile, 5) # On dessine le projectile (un simple petit cercle)
-
-#    if count == 0:
-#        if random.randrange(60 * 30) == 1: # 1 fois toutes les 30 secondes
-#            projectile_text_content = "je s'appelle Groot, amorelézariéjoi"
-#            projectile_text = FONT.render(projectile_text_content, True, pygame.Color(255, 255, 255))
-#            x = random.randrange(SCREEN_SIZE[0]-FONT.size(projectile_text_content)[0])
-#            y = random.randrange(SCREEN_SIZE[1]-FONT.size(projectile_text_content)[1])
-#            fenetre.blit(projectile_text, (x,y))
-
 
     pygame.display.flip() # Rafraichissement complet de la fenêtre avec les dernières opérations de dessin
 
