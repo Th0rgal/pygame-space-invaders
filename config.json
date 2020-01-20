@@ -33,6 +33,36 @@
             "aliens": "default",
             "aliens_rows": 2,
             "aliens_columns": 6
+        },
+        {
+            "name": "Nouveau protecteur",
+            "aliens": "fast",
+            "aliens_rows": 2,
+            "aliens_columns": 6
+        },
+        {
+            "name": "Invasion",
+            "aliens": "small",
+            "aliens_rows": 4,
+            "aliens_columns": 10
+        },
+        {
+            "name": "Ushain Bolt",
+            "aliens": "faster",
+            "aliens_rows": 2,
+            "aliens_columns": 3
+        },
+        {
+            "name": "Invasion II",
+            "aliens": "smaller",
+            "aliens_rows": 5,
+            "aliens_columns": 12
+        },
+        {
+            "name": "HARDEST",
+            "aliens": "cancrelas",
+            "aliens_rows": 5,
+            "aliens_columns": 12
         }
     ],
     "aliens": {
@@ -40,6 +70,7 @@
             "width": 48,
             "height": 32,
             "speed": 3,
+            "projectiles_gain" : 1,
             "image": "./alien_green.png",
             "kill_sound": "./kill.wav"
         },
@@ -47,6 +78,7 @@
             "width": 24,
             "height": 24,
             "speed": 3,
+            "projectiles_gain" : 3,
             "image": "./alien_orange.png",
             "kill_sound": "./kill.wav"
         },
@@ -54,6 +86,31 @@
             "width": 44,
             "height": 32,
             "speed": 5,
+            "projectiles_gain" : 2,
+            "image": "./alien_purple.png",
+            "kill_sound": "./kill.wav"
+        },
+        "faster": {
+            "width": 44,
+            "height": 32,
+            "speed": 9,
+            "projectiles_gain" : 5,
+            "image": "./alien_purple.png",
+            "kill_sound": "./kill.wav"
+        },
+        "smaller": {
+            "width": 16,
+            "height": 16,
+            "speed": 4,
+            "projectiles_gain" : 1,
+            "image": "./alien_orange.png",
+            "kill_sound": "./kill.wav"
+        },
+        "cancrelas": {
+            "width": 22,
+            "height": 16,
+            "speed": 9,
+            "projectiles_gain" : 1,
             "image": "./alien_purple.png",
             "kill_sound": "./kill.wav"
         }

@@ -27,17 +27,19 @@ class Entity:
 
 class Alien(Entity):
 
-    def __init__(self, size, position, speed, image, kill_sound):
+    def __init__(self, size, position, speed, projectiles_gain, image, kill_sound):
         Entity.__init__(self, size, position, image)
         self.speed = speed
+        self.projectiles_gain = projectiles_gain
         self.kill_sound = kill_sound
 
     def clone(self, position):
-        return Alien(self.size, position, self.speed, self.image, self.kill_sound)
+        return Alien(self.size, position, self.speed, self.projectiles_gain, self.image, self.kill_sound)
 
     def kill(self):
-        global score
+        global score, projectiles_amount
         score += 1
+        projectiles_amount += self.projectiles_gain
         self.kill_sound.play()
 
 class Spaceship(Entity):
@@ -126,7 +128,7 @@ def show_text(content, position, color):
 def win_level():
     global state
     if current_level < levels_amount:
-        show_title_and_text(pygame.Color(211, 200, 51), "Vous avez gagné !", "Il reste encore un ou plusieurs niveaux, appuyez sur entrer pour continuer !")
+        show_title_and_text(pygame.Color(211, 200, 51), "Vous avez réussi le niveau {} !".format(current_level+1), "Il reste encore un ou plusieurs niveaux, appuyez sur entrer pour continuer !")
         state = STATE_PAUSED
         pygame.display.flip()
     else:
@@ -134,7 +136,6 @@ def win_level():
 
 def lose_game():
     global state
-    print("demo")
     show_title_and_text(pygame.Color(255, 25, 25), "Vous avez perdu !", "Il ne vous manquait peut-être qu'un niveau ou bien des dizaines avant de gagner mais comme vous avez perdu vous devrez recommencer depuis le début pour le savoir ! Appuyez sur entrer pour quitter !")
     state = STATE_PAUSED
     pygame.display.flip()
@@ -161,9 +162,10 @@ def get_alien(alien_name):
     alien_config = config["aliens"][alien_name]
     alien_size = ( alien_config["width"], alien_config["height"] )
     alien_speed = alien_config["speed"] # in pixels per image
+    alien_projectiles_gain = alien_config["projectiles_gain"]
     alien_image = alien_config["image"]
     kill_sound = pygame.mixer.Sound( alien_config["kill_sound"] )
-    return Alien( alien_size,  None, alien_speed, pygame.transform.scale(pygame.image.load(alien_image), alien_size), kill_sound)
+    return Alien( alien_size,  None, alien_speed, alien_projectiles_gain, pygame.transform.scale(pygame.image.load(alien_image), alien_size), kill_sound)
 
 current_level = 0
 def load_next_level():
