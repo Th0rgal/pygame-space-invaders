@@ -192,6 +192,9 @@ def gerer_clavier_souris():
             continuer = False
 
         elif event.type == pygame.KEYDOWN:
+
+            if finished:
+                print("todo: load new level")
             
             if event.key == pygame.K_SPACE and projectiles_amount > 0:
                 spaceship.shoot()
