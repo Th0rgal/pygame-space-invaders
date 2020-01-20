@@ -41,7 +41,7 @@ class Spaceship(Entity):
         global projectiles_amount
         projectiles_amount -= 1
         self.shot_sound.play()
-        projectiles.append( (int(self.position[0])  + int(SPACESHIP_SIZE[0]/2),self.position[1]) )
+        projectiles.append( (int(self.position[0])  + int(self.size[0]/2),self.position[1]) )
 
 def generate_stars(amount = 50):
     stars = []
@@ -78,8 +78,22 @@ def lose_game():
     end_game()
 
 def load_settings(settings):
-    global SCREEN_SIZE
+    global SCREEN_SIZE, FONT, spaceship
+    pygame.display.set_caption( settings["title"] )
     SCREEN_SIZE = ( settings["screen_width"], settings["screen_lenght"] )
+    spaceship_size = ( settings["spaceship_width"], settings["spaceship_lenght"] )
+    spaceship_sound = pygame.mixer.Sound(settings["spaceship_shot_sound"])
+
+    spaceship = Spaceship(spaceship_size, (SCREEN_SIZE[0]/2, SCREEN_SIZE[1] - 75), pygame.transform.scale(pygame.image.load("vaisseau.png"), spaceship_size), spaceship_sound)
+
+    FONT = pygame.font.SysFont(settings["font_name"], settings["font_size"])
+
+def get_alien(alien_name):
+    alien_config = config["aliens"][alien_name]
+    alien_size = ( alien_config["width"], alien_config["lenght"] )
+    alien_image = alien_config["image"]
+    kill_sound = alien_config["kill_sound"]
+    return Alien( alien_size,  None, pygame.transform.scale(pygame.image.load(alien_image), alien_size), kill_sound)
 
 def load_level():
     pass
@@ -88,24 +102,22 @@ pygame.init() # initialisation du module "pygame"
 with open("./config.json") as json_file:
     config = json.load(json_file)
 load_settings(config["settings"])
+get_alien("default")
 
 # CONSTANTES
-SCREEN_SIZE = (600, 600)
 ALIEN_SIZE = (33, 27)
-SPACESHIP_SIZE = (64, 64)
-FONT = pygame.font.SysFont("arial", 24)
+
 DIRECTION_GAUCHE_DROITE = 0
 DIRECTION_DROITE_GAUCHE = 1
-PEW_SOUND = pygame.mixer.Sound("./pew.wav")
 KILL_SOUND = pygame.mixer.Sound("./kill.wav")
 
 # VARIABLES INITIALES
 fenetre = pygame.display.set_mode( SCREEN_SIZE )
-pygame.display.set_caption("Space Invader, Marchand Thomas 707")
+
 stars = generate_stars()
-alien_template = Alien( ALIEN_SIZE,  None, pygame.transform.scale(pygame.image.load("alien.png"), ALIEN_SIZE), KILL_SOUND)
+alien_template = get_alien("default")
 aliens = generate_aliens(alien_template, 1, 3)
-spaceship = Spaceship(SPACESHIP_SIZE, (SCREEN_SIZE[0]/2, SCREEN_SIZE[1] - 75), pygame.transform.scale(pygame.image.load("vaisseau.png"), SPACESHIP_SIZE), PEW_SOUND)
+
 direction_alien = DIRECTION_GAUCHE_DROITE
 projectiles = [ ]
 score = 0
