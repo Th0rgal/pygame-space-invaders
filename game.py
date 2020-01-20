@@ -2,6 +2,10 @@ import pygame
 import random
 import json
 
+# CONSTANTES
+DIRECTION_GAUCHE_DROITE = 0
+DIRECTION_DROITE_GAUCHE = 1
+
 class Entity:
     def __init__(self, size, position, image):
         self.size = size
@@ -43,17 +47,25 @@ class Spaceship(Entity):
         self.shot_sound.play()
         projectiles.append( (int(self.position[0])  + int(self.size[0]/2),self.position[1]) )
 
+class Level():
+
+    def __init__(self, name, alien_template, aliens_columns = 5, aliens_rows = 2):
+        self.name = name
+        self.alien_template = alien_template
+        self.aliens_columns = aliens_columns
+        self.aliens_rows = aliens_rows
+
 def generate_stars(amount = 50):
     stars = []
     for i in range (amount):
         stars.append( (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1])) )
     return stars
 
-def generate_aliens(alien, rows = 2, columns = 5):
+def generate_aliens(alien, columns = 5, rows = 2):
     aliens = [ ]
-    for x in range (columns):
-        for y in range (rows):
-            position = (x * (ALIEN_SIZE[0] + 10) , 10 + (10 + ALIEN_SIZE[1]) * y )
+    for x in range (rows):
+        for y in range (columns):
+            position = (x * (alien.size[0] + 10) , 10 + (10 + alien.size[1]) * y )
             aliens.append( alien.clone(position) )
     return aliens
 
@@ -69,18 +81,23 @@ def end_game():
     pygame.display.flip() 
     finished = True
 
-def win_game():
-    print_text("You won", pygame.Color(211, 200, 51))
+def win_level():
+    print_text("You won the level", pygame.Color(211, 200, 51))
     end_game()
 
 def lose_game():
     print_text("You lost", pygame.Color(255, 25, 25))
     end_game()
 
+def win_game():
+    print_text("You won the game", pygame.Color(211, 200, 51))
+    end_game()
+
 def load_settings(settings):
-    global SCREEN_SIZE, FONT, spaceship
+    global SCREEN_SIZE, FONT, fenetre, spaceship
     pygame.display.set_caption( settings["title"] )
     SCREEN_SIZE = ( settings["screen_width"], settings["screen_lenght"] )
+    fenetre = pygame.display.set_mode( SCREEN_SIZE )
     spaceship_size = ( settings["spaceship_width"], settings["spaceship_lenght"] )
     spaceship_sound = pygame.mixer.Sound(settings["spaceship_shot_sound"])
 
@@ -92,31 +109,28 @@ def get_alien(alien_name):
     alien_config = config["aliens"][alien_name]
     alien_size = ( alien_config["width"], alien_config["lenght"] )
     alien_image = alien_config["image"]
-    kill_sound = alien_config["kill_sound"]
+    kill_sound = pygame.mixer.Sound( alien_config["kill_sound"] )
     return Alien( alien_size,  None, pygame.transform.scale(pygame.image.load(alien_image), alien_size), kill_sound)
 
+current_level = 0
+def get_level():
+    global current_level
+    levels_config = config["levels"]
+    level = levels_config[current_level]
+    current_level += 1
+    return Level(level["name"], get_alien(level["aliens"]), level["aliens_columns"], level["aliens_rows"])
+
 def load_level():
-    pass
+    global aliens
+    level = get_level()
+    aliens = generate_aliens(level.alien_template, level.aliens_columns, level.aliens_rows)
 
 pygame.init() # initialisation du module "pygame"
 with open("./config.json") as json_file:
     config = json.load(json_file)
 load_settings(config["settings"])
-get_alien("default")
-
-# CONSTANTES
-ALIEN_SIZE = (33, 27)
-
-DIRECTION_GAUCHE_DROITE = 0
-DIRECTION_DROITE_GAUCHE = 1
-KILL_SOUND = pygame.mixer.Sound("./kill.wav")
-
-# VARIABLES INITIALES
-fenetre = pygame.display.set_mode( SCREEN_SIZE )
-
 stars = generate_stars()
-alien_template = get_alien("default")
-aliens = generate_aliens(alien_template, 1, 3)
+load_level()
 
 direction_alien = DIRECTION_GAUCHE_DROITE
 projectiles = [ ]
@@ -131,7 +145,7 @@ def move_aliens():
     shift_left = False
     for alien in aliens:
         if direction_alien == DIRECTION_GAUCHE_DROITE:
-            if alien.position[0] + ALIEN_SIZE[0] > SCREEN_SIZE[0]:
+            if alien.position[0] + alien.size[0] > SCREEN_SIZE[0]:
                 direction_alien = DIRECTION_DROITE_GAUCHE
                 move_to_bottom = True
             else:
@@ -145,7 +159,7 @@ def move_aliens():
 
     for alien in aliens:
         if move_to_bottom:
-            alien.move(0, ALIEN_SIZE[1])
+            alien.move(0, alien.size[1])
             if alien.position[1] >= SCREEN_SIZE[1]:
                 lose_game()
         elif shift_right:
@@ -237,7 +251,7 @@ while continuer:
     clock.tick(60)
 
     if len(aliens) == 0:
-        win_game()
+        win_level()
 
     gerer_clavier_souris()
     if not finished: 
