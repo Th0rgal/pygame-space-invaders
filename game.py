@@ -59,8 +59,8 @@ def generate_stars(amount = 50):
 
 def generate_aliens(alien, columns = 5, rows = 2):
     aliens = [ ]
-    for x in range (rows):
-        for y in range (columns):
+    for x in range (columns):
+        for y in range (rows):
             position = (x * (alien.size[0] + 10) , 10 + (10 + alien.size[1]) * y )
             aliens.append( alien.clone(position) )
     return aliens
@@ -134,7 +134,7 @@ def win_level():
 def lose_game():
     global state
     print("demo")
-    show_title_and_text(pygame.Color(255, 25, 25), "Vous avez perdu !", "Il ne vous manquait peut-être qu'un niveau ou bien des dizaines avant de gagner mais comme vous avez perdu vous devez recommencer depuis le début ! Appuyez sur entrer !")
+    show_title_and_text(pygame.Color(255, 25, 25), "Vous avez perdu !", "Il ne vous manquait peut-être qu'un niveau ou bien des dizaines avant de gagner mais comme vous avez perdu vous devrez recommencer depuis le début pour le savoir ! Appuyez sur entrer pour quitter !")
     state = STATE_PAUSED
     pygame.display.flip()
 
@@ -210,7 +210,7 @@ def move_aliens():
     for alien in aliens:
         if move_to_bottom:
             alien.move(0, alien.size[1])
-            if alien.position[1] >= SCREEN_SIZE[1]:
+            if alien.position[1] + alien.size[1] >= SCREEN_SIZE[1]:
                 lose_game()
         elif shift_right:
             alien.move(5, 0)

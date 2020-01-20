@@ -20,16 +20,28 @@
             "aliens" : "default",
             "aliens_rows" : 1,
             "aliens_columns" : 1
+        },
+        {
+            "name": "Chasseur d'aliens débutant",
+            "aliens" : "default",
+            "aliens_rows" : 1,
+            "aliens_columns" : 3
+        },
+        {
+            "name": "Petit joueur",
+            "aliens" : "default",
+            "aliens_rows" : 2,
+            "aliens_columns" : 6
         }
     ],
 
     "aliens": {
         "default": {
 
-            "width" : 33,
-            "lenght" : 27,
+            "width" : 48,
+            "lenght" : 32,
 
-            "image": "./alien.png",
+            "image": "./alien_green.png",
             "kill_sound" : "./kill.wav"
 
         }
