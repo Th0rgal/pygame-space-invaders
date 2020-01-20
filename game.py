@@ -27,12 +27,13 @@ class Entity:
 
 class Alien(Entity):
 
-    def __init__(self, size, position, image, kill_sound):
+    def __init__(self, size, position, speed, image, kill_sound):
         Entity.__init__(self, size, position, image)
+        self.speed = speed
         self.kill_sound = kill_sound
 
     def clone(self, position):
-        return Alien(self.size, position, self.image, self.kill_sound)
+        return Alien(self.size, position, self.speed, self.image, self.kill_sound)
 
     def kill(self):
         global score
@@ -159,9 +160,10 @@ def load_settings(settings):
 def get_alien(alien_name):
     alien_config = config["aliens"][alien_name]
     alien_size = ( alien_config["width"], alien_config["height"] )
+    alien_speed = alien_config["speed"] # in pixels per image
     alien_image = alien_config["image"]
     kill_sound = pygame.mixer.Sound( alien_config["kill_sound"] )
-    return Alien( alien_size,  None, pygame.transform.scale(pygame.image.load(alien_image), alien_size), kill_sound)
+    return Alien( alien_size,  None, alien_speed, pygame.transform.scale(pygame.image.load(alien_image), alien_size), kill_sound)
 
 current_level = 0
 def load_next_level():
@@ -213,9 +215,9 @@ def move_aliens():
             if alien.position[1] + alien.size[1] >= SCREEN_SIZE[1]:
                 lose_game()
         elif shift_right:
-            alien.move(5, 0)
+            alien.move(alien.speed, 0)
         elif shift_left:
-            alien.move(-5, 0)
+            alien.move(-alien.speed, 0)
 
 def update_projectiles():
     global projectiles, projectiles_amount

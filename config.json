@@ -18,7 +18,7 @@
         },
         {
             "name": "Chasseur d'aliens débutant",
-            "aliens": "superfast",
+            "aliens": "fast",
             "aliens_rows": 1,
             "aliens_columns": 6
         },
@@ -27,25 +27,33 @@
             "aliens": "small",
             "aliens_rows": 1,
             "aliens_columns": 3
+        },
+        {
+            "name": "Explorateur de la galaxie",
+            "aliens": "default",
+            "aliens_rows": 2,
+            "aliens_columns": 6
         }
-
     ],
     "aliens": {
         "default": {
             "width": 48,
             "height": 32,
+            "speed": 3,
             "image": "./alien_green.png",
             "kill_sound": "./kill.wav"
         },
         "small": {
             "width": 24,
             "height": 24,
+            "speed": 3,
             "image": "./alien_orange.png",
             "kill_sound": "./kill.wav"
         },
-        "superfast": {
+        "fast": {
             "width": 44,
             "height": 32,
+            "speed": 5,
             "image": "./alien_purple.png",
             "kill_sound": "./kill.wav"
         }
