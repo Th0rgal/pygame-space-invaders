@@ -124,6 +124,8 @@ def move_aliens():
     for alien in aliens:
         if move_to_bottom:
             alien.move(0, ALIEN_SIZE[1])
+            if alien.position[0] <= 0:
+                lose_game()
         elif shift_right:
             alien.move(5, 0)
         elif shift_left:
