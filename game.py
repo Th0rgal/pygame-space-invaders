@@ -56,6 +56,27 @@ def generate_aliens(alien, rows = 2, columns = 5):
             aliens.append( alien.clone(position) )
     return aliens
 
+def print_text(content, color):
+    global FONT
+    text = FONT.render(content, True, color)
+    x = int((SCREEN_SIZE[0]-FONT.size(content)[0])/2)
+    y = int((SCREEN_SIZE[1]-FONT.size(content)[1])/2)
+    fenetre.blit(text, (x,y))
+
+def end_game():
+    global finished
+    pygame.display.flip() 
+    finished = True
+
+def win_game():
+    print_text("You won", pygame.Color(211, 200, 51))
+    end_game()
+
+def lose_game():
+    print_text("You lost", pygame.Color(255, 25, 25))
+    end_game()
+
+
 pygame.init() # initialisation du module "pygame"
 
 # CONSTANTES
@@ -73,7 +94,7 @@ fenetre = pygame.display.set_mode( SCREEN_SIZE )
 pygame.display.set_caption("Space Invader, Marchand Thomas 707")
 stars = generate_stars()
 alien_template = Alien( ALIEN_SIZE,  None, pygame.transform.scale(pygame.image.load("alien.png"), ALIEN_SIZE), KILL_SOUND)
-aliens = generate_aliens(alien_template, 2, 5)
+aliens = generate_aliens(alien_template, 1, 3)
 spaceship = Spaceship(SPACESHIP_SIZE, (SCREEN_SIZE[0]/2, SCREEN_SIZE[1] - 75), pygame.transform.scale(pygame.image.load("vaisseau.png"), SPACESHIP_SIZE), PEW_SOUND)
 direction_alien = DIRECTION_GAUCHE_DROITE
 projectiles = [ ]
@@ -175,7 +196,7 @@ def gerer_clavier_souris():
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
-            continuer = 0
+            continuer = False
 
         elif event.type == pygame.KEYDOWN:
             
@@ -191,13 +212,19 @@ def gerer_clavier_souris():
         spaceship.move( -10, 0 )
 
 clock = pygame.time.Clock()
-continuer = 1
-while continuer == 1:
+continuer = True
+finished = False
+while continuer:
 
     clock.tick(60)
-    dessiner()
+
+    if len(aliens) == 0:
+        win_game()
+
     gerer_clavier_souris()
-    move_aliens()
-    update_projectiles()
+    if not finished: 
+        dessiner()
+        move_aliens()
+        update_projectiles()
 
 pygame.quit()
