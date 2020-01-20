@@ -8,8 +8,7 @@ DIRECTION_DROITE_GAUCHE = 1
 
 STATE_PLAYING = 0
 STATE_PAUSED = 1
-STATE_FINISHED = 2
-STATE_EXIT = 3
+STATE_EXIT = 2
 
 class Entity:
     def __init__(self, size, position, image):
@@ -52,14 +51,6 @@ class Spaceship(Entity):
         self.shot_sound.play()
         projectiles.append( (int(self.position[0])  + int(self.size[0]/2),self.position[1]) )
 
-class Level():
-
-    def __init__(self, name, alien_template, aliens_columns = 5, aliens_rows = 2):
-        self.name = name
-        self.alien_template = alien_template
-        self.aliens_columns = aliens_columns
-        self.aliens_rows = aliens_rows
-
 def generate_stars(amount = 50):
     stars = []
     for i in range (amount):
@@ -74,29 +65,83 @@ def generate_aliens(alien, columns = 5, rows = 2):
             aliens.append( alien.clone(position) )
     return aliens
 
-def print_text(content, color):
+def show_title_and_text(color, title, text = None):
     font = pygame.font.SysFont("arial", 45)
+    title_size = font.size(title)
+    text_size = simulate_show_text(text)
+    
+    x_title, y_title = int((SCREEN_SIZE[0]-font.size(title)[0])/2), int(((SCREEN_SIZE)[1] - title_size[1] - text_size[1])/2)
+
+    title_surface = font.render(title, True, color)
+    fenetre.blit(title_surface, (x_title, y_title))
+    
+
+    if text: # les string se comportent comme des booléens
+        show_text(text, ( int((SCREEN_SIZE[0]-text_size[0])/2), y_title + title_size[1] ), color)
+
+
+def simulate_show_text(content):
+    font = pygame.font.SysFont("arial", 25)
+    words = [word.split() for word in content.splitlines()]
+    space_size = font.size(' ')[0]
+    max_width, max_height = fenetre.get_size()
+    x, y = (0, 0)
+    max_x = x
+    for line in words:
+        for word in line:
+            word_width, word_height = font.size(word)
+            if x + word_width >= max_width:
+                if x > max_x:
+                    max_x = x
+                x = 0
+                y += word_height
+            x += word_width + space_size
+        if x > max_x:
+            max_x = x
+        x = 0
+        y += word_height
+    return (max_x, y)
+
+def show_text(content, position, color):
+    font = pygame.font.SysFont("arial", 25)
     text = font.render(content, True, color)
-    x = int((SCREEN_SIZE[0]-font.size(content)[0])/2)
-    y = int((SCREEN_SIZE[1]-font.size(content)[1])/2)
-    fenetre.blit(text, (x,y))
+
+    words = [word.split() for word in content.splitlines()]  # Tableau 2d pour pouvoir revenir à la ligne manuellement
+    space_size = font.size(' ')[0]
+    max_width, max_height = SCREEN_SIZE
+    x, y = position
+    for line in words: # on sépare le texte en lignes (manuelles)
+        for word in line: # on sépare les lignes en mots
+            word_surface = font.render(word, 0, color)
+            word_width, word_height = word_surface.get_size()
+            if x + word_width >= max_width: # on va à la ligne d'après si on a pas la place
+                x = position[0]
+                y += word_height
+            fenetre.blit(word_surface, (x, y))
+            x += word_width + space_size
+        x = position[0]  # on revient à la fin d'une ligne manuelle
+        y += word_height
 
 def win_level():
     global state
-    print_text("You won the level", pygame.Color(211, 200, 51))
-    state = STATE_PAUSED
-    pygame.display.flip()
+    if current_level < levels_amount:
+        show_title_and_text(pygame.Color(211, 200, 51), "Vous avez gagné !", "Il reste encore un ou plusieurs niveaux, appuyez sur entrer pour continuer !")
+        state = STATE_PAUSED
+        pygame.display.flip()
+    else:
+        win_game()
 
 def lose_game():
     global state
-    print_text("You lost", pygame.Color(255, 25, 25))
-    state = STATE_FINISHED
+    print("demo")
+    show_title_and_text(pygame.Color(255, 25, 25), "Vous avez perdu !", "Il ne vous manquait peut-être qu'un niveau ou bien des dizaines avant de gagner mais comme vous avez perdu vous devez recommencer depuis le début ! Appuyez sur entrer !")
+    state = STATE_PAUSED
     pygame.display.flip()
 
 def win_game():
     global state
-    print_text("You won the game", pygame.Color(211, 200, 51))
-    state = STATE_FINISHED
+    show_title_and_text(pygame.Color(211, 200, 51), "Vous avez gagné !", "Le jeu est malheureusement terminé : vous avez fini tous les niveaux. Mais ne vous inquiétez pas, j'ai tout prévu : vous pouvez rajouter des niveaux dans config.json")
+    state = STATE_PAUSED
     pygame.display.flip()
 
 def load_settings(settings):
@@ -119,28 +164,26 @@ def get_alien(alien_name):
     return Alien( alien_size,  None, pygame.transform.scale(pygame.image.load(alien_image), alien_size), kill_sound)
 
 current_level = 0
-def get_level():
-    global current_level
-    levels_config = config["levels"]
-    level = levels_config[current_level]
-    current_level += 1
-    return Level(level["name"], get_alien(level["aliens"]), level["aliens_columns"], level["aliens_rows"])
+def load_next_level():
+    global state, aliens, current_level, levels_amount
+    level_configs = config["levels"]
+    levels_amount = len(level_configs)
+    level_config = level_configs[current_level]
 
-def load_level():
-    global aliens
-    level = get_level()
-    aliens = generate_aliens(level.alien_template, level.aliens_columns, level.aliens_rows)
+    aliens = generate_aliens(get_alien(level_config["aliens"]), level_config["aliens_columns"], level_config["aliens_rows"])
+
+    current_level += 1
+    state = STATE_PLAYING
 
 pygame.init() # initialisation du module "pygame"
 with open("./config.json") as json_file:
     config = json.load(json_file)
 load_settings(config["settings"])
 stars = generate_stars()
-load_level()
+load_next_level()
 
 direction_alien = DIRECTION_GAUCHE_DROITE
 projectiles = [ ]
-state = STATE_PLAYING
 score = 0
 projectiles_amount = 100
 
@@ -228,7 +271,7 @@ def dessiner():
 # Fonction en charge de gérer les évènements clavier (ou souris)
 # Cette fonction sera appelée depuis notre boucle infinie
 def gerer_clavier_souris():
-    global state, spaceship, projectiles, projectiles_amount
+    global state
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
@@ -236,11 +279,16 @@ def gerer_clavier_souris():
 
         elif event.type == pygame.KEYDOWN:
 
-            if state == STATE_FINISHED:
-                print("todo: load new level")
-            
-            if event.key == pygame.K_SPACE and projectiles_amount > 0:
-                spaceship.shoot()
+            if event.key == pygame.K_RETURN:
+                if state == STATE_PAUSED:
+                    if current_level < levels_amount: # si tous les niveaux ont été joués
+                        load_next_level()
+                    else:
+                        state = STATE_EXIT
+
+            else:       
+                if event.key == pygame.K_SPACE and projectiles_amount > 0:
+                    spaceship.shoot()
 
     touches_pressees = pygame.key.get_pressed()
 

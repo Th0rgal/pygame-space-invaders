@@ -2,8 +2,8 @@
     "settings": {
         "title" : "Space Invader, Marchand Thomas 707",
 
-        "screen_width" : 1200,
-        "screen_lenght" : 500,
+        "screen_width" : 500,
+        "screen_lenght" : 400,
 
         "spaceship_width" : 64,
         "spaceship_lenght" : 64,
@@ -18,8 +18,8 @@
         {
             "name": "Petit joueur",
             "aliens" : "default",
-            "aliens_rows" : 5,
-            "aliens_columns" : 2
+            "aliens_rows" : 1,
+            "aliens_columns" : 1
         }
     ],
 
