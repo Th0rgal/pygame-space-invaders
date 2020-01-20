@@ -6,6 +6,11 @@ import json
 DIRECTION_GAUCHE_DROITE = 0
 DIRECTION_DROITE_GAUCHE = 1
 
+STATE_PLAYING = 0
+STATE_PAUSED = 1
+STATE_FINISHED = 2
+STATE_EXIT = 3
+
 class Entity:
     def __init__(self, size, position, image):
         self.size = size
@@ -76,22 +81,23 @@ def print_text(content, color):
     y = int((SCREEN_SIZE[1]-font.size(content)[1])/2)
     fenetre.blit(text, (x,y))
 
-def end_game():
-    global finished
-    pygame.display.flip() 
-    finished = True
-
 def win_level():
+    global state
     print_text("You won the level", pygame.Color(211, 200, 51))
-    end_game()
+    state = STATE_PAUSED
+    pygame.display.flip()
 
 def lose_game():
+    global state
     print_text("You lost", pygame.Color(255, 25, 25))
-    end_game()
+    state = STATE_FINISHED
+    pygame.display.flip()
 
 def win_game():
+    global state
     print_text("You won the game", pygame.Color(211, 200, 51))
-    end_game()
+    state = STATE_FINISHED
+    pygame.display.flip()
 
 def load_settings(settings):
     global SCREEN_SIZE, FONT, fenetre, spaceship
@@ -134,6 +140,7 @@ load_level()
 
 direction_alien = DIRECTION_GAUCHE_DROITE
 projectiles = [ ]
+state = STATE_PLAYING
 score = 0
 projectiles_amount = 100
 
@@ -221,15 +228,15 @@ def dessiner():
 # Fonction en charge de gérer les évènements clavier (ou souris)
 # Cette fonction sera appelée depuis notre boucle infinie
 def gerer_clavier_souris():
-    global continuer, spaceship, projectiles, projectiles_amount
+    global state, spaceship, projectiles, projectiles_amount
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
-            continuer = False
+            state = STATE_EXIT
 
         elif event.type == pygame.KEYDOWN:
 
-            if finished:
+            if state == STATE_FINISHED:
                 print("todo: load new level")
             
             if event.key == pygame.K_SPACE and projectiles_amount > 0:
@@ -244,9 +251,7 @@ def gerer_clavier_souris():
         spaceship.move( -10, 0 )
 
 clock = pygame.time.Clock()
-continuer = True
-finished = False
-while continuer:
+while state != STATE_EXIT:
 
     clock.tick(60)
 
@@ -254,7 +259,7 @@ while continuer:
         win_level()
 
     gerer_clavier_souris()
-    if not finished: 
+    if state != STATE_PAUSED: 
         dessiner()
         move_aliens()
         update_projectiles()
