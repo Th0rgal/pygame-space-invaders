@@ -128,7 +128,7 @@ def show_text(content, position, color):
 def win_level():
     global state
     if current_level < levels_amount:
-        show_title_and_text(pygame.Color(211, 200, 51), "Vous avez réussi le niveau {} !".format(current_level+1), "Il reste encore un ou plusieurs niveaux, appuyez sur entrer pour continuer !")
+        show_title_and_text(pygame.Color(211, 200, 51), "Vous avez réussi le niveau {} !".format(current_level), "Il reste encore un ou plusieurs niveaux, appuyez sur entrer pour continuer !")
         state = STATE_PAUSED
         pygame.display.flip()
     else:
