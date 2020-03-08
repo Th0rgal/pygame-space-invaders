@@ -8,7 +8,8 @@ DIRECTION_DROITE_GAUCHE = 1
 
 STATE_PLAYING = 0
 STATE_PAUSED = 1
-STATE_EXIT = 2
+STATE_PAUSED_LOST = 2
+STATE_EXIT = 3
 
 class Entity:
     def __init__(self, size, position, image):
@@ -137,7 +138,7 @@ def win_level():
 def lose_game():
     global state
     show_title_and_text(pygame.Color(255, 25, 25), "Vous avez perdu !", "Il ne vous manquait peut-être qu'un niveau ou bien des dizaines avant de gagner mais comme vous avez perdu vous devrez recommencer depuis le début pour le savoir ! Appuyez sur entrer pour quitter !")
-    state = STATE_PAUSED
+    state = STATE_PAUSED_LOST
     pygame.display.flip()
 
 def win_game():
@@ -285,10 +286,12 @@ def gerer_clavier_souris():
 
             if event.key == pygame.K_RETURN:
                 if state == STATE_PAUSED:
-                    if current_level < levels_amount: # si tous les niveaux ont été joués
+                    if current_level < levels_amount: # si tous les niveaux n'ont pas été joués
                         load_next_level()
                     else:
                         state = STATE_EXIT
+                elif state == STATE_PAUSED_LOST:
+                    state = STATE_EXIT
 
             else:       
                 if event.key == pygame.K_SPACE and projectiles_amount > 0:
@@ -311,7 +314,7 @@ while state != STATE_EXIT:
         win_level()
 
     gerer_clavier_souris()
-    if state != STATE_PAUSED: 
+    if state != STATE_PAUSED and state != STATE_PAUSED_LOST: 
         dessiner()
         move_aliens()
         update_projectiles()

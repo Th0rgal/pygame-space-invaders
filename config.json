@@ -21,48 +21,6 @@
             "aliens": "fast",
             "aliens_rows": 1,
             "aliens_columns": 6
-        },
-        {
-            "name": "Jeune explorateur de la galaxie",
-            "aliens": "small",
-            "aliens_rows": 1,
-            "aliens_columns": 3
-        },
-        {
-            "name": "Explorateur de la galaxie",
-            "aliens": "default",
-            "aliens_rows": 2,
-            "aliens_columns": 6
-        },
-        {
-            "name": "Nouveau protecteur",
-            "aliens": "fast",
-            "aliens_rows": 2,
-            "aliens_columns": 6
-        },
-        {
-            "name": "Invasion",
-            "aliens": "small",
-            "aliens_rows": 4,
-            "aliens_columns": 10
-        },
-        {
-            "name": "Ushain Bolt",
-            "aliens": "faster",
-            "aliens_rows": 2,
-            "aliens_columns": 3
-        },
-        {
-            "name": "Invasion II",
-            "aliens": "smaller",
-            "aliens_rows": 5,
-            "aliens_columns": 12
-        },
-        {
-            "name": "HARDEST",
-            "aliens": "cancrelas",
-            "aliens_rows": 5,
-            "aliens_columns": 12
         }
     ],
     "aliens": {
